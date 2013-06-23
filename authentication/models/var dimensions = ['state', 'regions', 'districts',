@@ -1,0 +1,14 @@
+var dimensions = ['state', 'regions', 'districts', 'cities', 'languages','movies','theatre category','theatre','screens','shows','seating_type'];
+
+
+var valueIndex = {
+	state:['Karnataka', 'Kerala', 'Tamil Nadu', 'Andra Pradesh', 'Maharastra'],
+	regions:['Region1', 'Region2','Region3', 'Region4', 'Region5']
+}
+
+
+
+db.transactions.group({key:{movies},reduce: function ( curr, result ) { result.total += curr.item.price;}, initial:{total:0}})
+db.transactions.group({key:{movies:1},reduce: function ( curr, result ) { result.total += curr.price;},initial: { total : 0 }})
+
+db.transactions.aggregate({key:{movies:1},reduce: function ( curr, result ) { result.total += curr.price;},initial: { total : 0 }})

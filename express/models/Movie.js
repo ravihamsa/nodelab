@@ -17,7 +17,7 @@ MovieSchema.methods.toString = function(){
     return this.name+' '+this.producer;
 }
 
-var Movie = db.mongoose.model('Movie', MovieSchema);
+var Movie = db.mongoose.model('MyTransaction', MovieSchema);
 
 module.exports.add = add;
 
@@ -34,3 +34,8 @@ function add(name,producer, callback){
     })
 }
 
+
+
+function addRecord(){
+
+}

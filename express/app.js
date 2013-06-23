@@ -3,6 +3,7 @@ var lorem = require('lorem');
 var db = require('./lib/db');
 var mongoose = db.mongoose;
 var movie = require('./models/Movie');
+var transaction = require('./models/Transaction');
 var app = express();
 
 var db = mongoose.connection;
@@ -24,6 +25,18 @@ app.get('/movies',function(req, res){
 
         console.log(movie);
         res.send(movie);
+    });
+
+
+});
+
+
+app.get('/fillTransaction',function(req, res){
+    transaction.fillRecord(function(error, trans){
+        if(error){
+            throw  error;
+        }
+        res.send(trans);
     });
 
 
