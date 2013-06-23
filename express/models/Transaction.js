@@ -34,7 +34,9 @@ var MyTransaction = db.mongoose.model('Transaction', TransactionSchema);
 
 module.exports.add = add;
 module.exports.all = all;
+module.exports.find = find;
 module.exports.fillRecord = fillRecord;
+module.exports.groupedFind = groupedFind;
 
 function add(obj, callback) {
     var instance = new MyTransaction();
@@ -61,7 +63,54 @@ function all(callback) {
     });
 }
 
-function getRandom(max){
+function find(filter, callback) {
+    MyTransaction.find(filter, function (err, transactions) {
+        if (err) {
+            callback(err);
+        } else {
+            callback(null, transactions);
+        }
+    });
+}
+
+function groupedFind(key, callback) {
+    //db.transactions.aggregate({$project:{movieName:1, price:1, '_id':0}}, {$group:{'_id':'$movieName', collection:{'$sum':'$price'}, ticketsSold:{'$sum':1}}})
+
+    var project = {
+        $project: {
+            price: 1,
+            '_id': 0
+        }
+    }
+
+    var group = {
+        '$group': {
+            _id:'$'+key,
+            collection: {
+                '$sum': '$price'
+            },
+            ticketsSold: {
+                '$sum': 1
+            }
+        }
+    }
+
+    project.$project[key]=1;
+
+
+
+
+    MyTransaction.aggregate(project, group, function (err, transactions) {
+        if (err) {
+            callback(err);
+        } else {
+            callback(null, transactions);
+        }
+    });
+}
+
+
+function getRandom(max) {
     return Math.ceil(Math.random() * (max))
 }
 
@@ -91,24 +140,24 @@ function fillRecord(callback) {
                                 var theater = 'theater' + t;
                                 var sc = getRandom(3)
                                 var screen = 'screen' + sc;
-                                var movieName = 'movieName'+ getRandom(10);
-                                var language = 'language'+ getRandom(5);
+                                var movieName = 'movieName' + getRandom(10);
+                                var language = 'language' + getRandom(5);
                                 for (var sh = 0; sh < 3; sh++) { //show
-                                    var show = 'show'+sh;
-                                    var price = (sh*sc*25)+25;
+                                    var show = 'show' + sh;
+                                    var price = (sh * sc * 25) + 25;
 
-                                    for(var st=0; st<2; st++){
-                                        var seating_type= 'seating_type'+st;
+                                    for (var st = 0; st < 2; st++) {
+                                        var seating_type = 'seating_type' + st;
                                         var sold = getRandom(10);
-                                        for(var ticket_count=0; ticket_count<sold; ticket_count++){
-                                            obj.price= price;
-                                            obj.show=show;
-                                            obj.screen=screen;
-                                            obj.theater=theater;
-                                            obj.theatre_category=theatre_category;
-                                            obj.seating_type=seating_type;
-                                            obj.movieName=movieName;
-                                            obj.language=language;
+                                        for (var ticket_count = 0; ticket_count < sold; ticket_count++) {
+                                            obj.price = price;
+                                            obj.show = show;
+                                            obj.screen = screen;
+                                            obj.theater = theater;
+                                            obj.theatre_category = theatre_category;
+                                            obj.seating_type = seating_type;
+                                            obj.movieName = movieName;
+                                            obj.language = language;
                                             obj.date = date.valueOf();
                                             add(obj, function (err, instance) {
                                                 if (err) {
@@ -119,7 +168,6 @@ function fillRecord(callback) {
                                             })
                                         }
                                     }
-
 
 
                                 }

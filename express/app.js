@@ -1,12 +1,13 @@
 var express = require('express');
 var lorem = require('lorem');
 var db = require('./lib/db');
+var url = require('url');
 var mongoose = db.mongoose;
 var movie = require('./models/Movie');
 var transaction = require('./models/Transaction');
 var app = express();
 
-var port = 8080;
+var port = 5000;
 
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
@@ -31,10 +32,28 @@ app.get('/fillTransaction',function(req, res){
 
 
 app.get('/transactions',function(req, res){
-    transaction.all(function(error, trans){
+    var url_parts = url.parse(req.url, true);
+    var query = url_parts.query;
+    console.log('finding by query: ', query);
+    transaction.find(query, function(error, trans){
         if(error){
             throw  error;
         }
         res.send(trans);
     });
 });
+
+
+app.get('/transactions/grouped',function(req, res){
+    var url_parts = url.parse(req.url, true);
+    var query = url_parts.query;
+    console.log('finding by grouped: ', query.groupBy);
+    transaction.groupedFind(query.groupBy, function(error, trans){
+        if(error){
+            throw  error;
+        }
+        res.send(trans);
+    });
+});
+
+
