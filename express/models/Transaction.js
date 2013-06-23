@@ -11,15 +11,15 @@ var moment = require('moment');
 
 var TransactionSchema = new db.Schema({
     state:String,
-    regions:String,
-    districts:String,
-    cities:String,
-    languages:String,
+    region:String,
+    district:String,
+    city:String,
+    language:String,
     movieName:String,
     theatre:String,
     theatre_category:String,
-    screens:String,
-    shows:String,
+    screen:String,
+    show:String,
     seating_type:String,
     date:Date,
     price:Number
@@ -33,6 +33,7 @@ TransactionSchema.methods.toString = function(){
 var MyTransaction = db.mongoose.model('Transaction', TransactionSchema);
 
 module.exports.add = add;
+module.exports.all = all;
 module.exports.fillRecord = fillRecord;
 
 function add(obj, callback){
@@ -50,33 +51,41 @@ function add(obj, callback){
 }
 
 
+function all(callback){
+    MyTransaction.find(function(err, transactions){
+        if(err){
+            callback(err);
+        }else{
+            callback(null, transactions);
+        }
+    });
+}
+
 
 function fillRecord(callback){
     //'state', 'regions', 'districts', 'cities',
-    var dimensions = ['languages','movieName','theatre_category','theatre','screens','shows','seating_type'];
+    var dimensions = ['language','movieName','theatre_category','theatre','screen','show','seating_type'];
     var indexCount = [6, 30, 3, 5, 2, 4, 3];
 
     var date =  moment().startOf('day');
 
-    for(var i= 0; i<1; i++){
+    for(var i= 0; i<30; i++){
         var obj = {};
-        for(var state=0; state<5; state++){
+        for(var state=0; state<2; state++){
             obj.state = 'state'+state;
-            for(var regions=0; regions<5; regions++){
-                obj.regions = 'regions'+state+regions;
-                for(var districts=0; districts<5; districts++){
-                    obj.districts = 'districts'+state+regions+districts;
-                    for(var cities=0; cities<5; cities++){
-                        obj.cities = 'cities'+state+regions+districts+cities;
+            for(var region=0; region<2; region++){
+                obj.region = 'region'+state+region;
+                for(var district=0; district<2; district++){
+                    obj.district = 'district'+state+region+district;
+                    for(var city=0; city<2; city++){
+                        obj.city = 'city'+state+region+district+city;
 
                         _.each(dimensions,function(key, index){
                             obj[key] = key + Math.floor(Math.random()*(indexCount[index]));
                         })
 
                         obj.price = 50*Math.ceil(Math.random()*(6));
-
                         obj.date = date.valueOf();
-                        console.log(obj);
                         add(obj, function(err, instance){
                             if(err){
                                 callback(err);
