@@ -7,7 +7,7 @@ var movie = require('./models/Movie');
 var transaction = require('./models/Transaction');
 var app = express();
 
-var port = 5000;
+var port = 5431;
 
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
@@ -47,8 +47,8 @@ app.get('/transactions',function(req, res){
 app.get('/transactions/grouped',function(req, res){
     var url_parts = url.parse(req.url, true);
     var query = url_parts.query;
-    console.log('finding by grouped: ', query.groupBy);
-    transaction.groupedFind(query.groupBy, function(error, trans){
+    console.log('finding by grouped: ', query.dimension);
+    transaction.groupedFind(query.dimension, function(error, trans){
         if(error){
             throw  error;
         }

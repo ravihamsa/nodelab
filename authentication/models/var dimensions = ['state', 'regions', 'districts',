@@ -9,6 +9,6 @@ var valueIndex = {
 
 
 db.transactions.group({key:{movies},reduce: function ( curr, result ) { result.total += curr.item.price;}, initial:{total:0}})
-db.transactions.group({key:{movies:1},reduce: function ( curr, result ) { result.total += curr.price;},initial: { total : 0 }})
+db.transactions.group({key:{movie:1},reduce: function ( curr, result ) { result.total += curr.price;},initial: { total : 0 }})
 
-db.transactions.aggregate({key:{movies:1},reduce: function ( curr, result ) { result.total += curr.price;},initial: { total : 0 }})
+db.transactions.aggregate({key:{movies:1}},{reduce: function ( curr, result ) { result.total += curr.price;},initial: { total : 0 }})

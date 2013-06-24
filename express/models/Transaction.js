@@ -137,7 +137,7 @@ function fillRecord(callback) {
                             var theatre_category = 'theatre_category' + tc;
 
                             for (var t = 0; t < getRandom(3); t++) {
-                                var theater = 'theater' + t;
+                                var theatre = 'theater' + t;
                                 var sc = getRandom(3)
                                 var screen = 'screen' + sc;
                                 var movieName = 'movieName' + getRandom(10);
@@ -153,7 +153,7 @@ function fillRecord(callback) {
                                             obj.price = price;
                                             obj.show = show;
                                             obj.screen = screen;
-                                            obj.theater = theater;
+                                            obj.theatre = theatre;
                                             obj.theatre_category = theatre_category;
                                             obj.seating_type = seating_type;
                                             obj.movieName = movieName;
